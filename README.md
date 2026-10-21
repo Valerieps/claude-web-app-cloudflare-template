@@ -8,7 +8,8 @@ Este repositório é um template para apps web de grupo construídos com o Claud
 TypeScript no navegador, um Cloudflare Worker com um banco SQLite (Durable Object) no servidor,
 login com Google só para quem tem convite, atualização ao vivo, testes com Vitest, CI no GitHub
 Actions e deploy pelo Cloudflare Workers Builds, com as docs organizadas para o Claude ler só o que
-precisa. Para um app que guarda tudo no navegador, sem servidor, use o `claude-web-app-template`.
+precisa. Para um app que guarda tudo no navegador, sem servidor, use o
+[claude-web-app-template](https://github.com/Valerieps/claude-web-app-template).
 
 1. No GitHub, **Use this template > Create a new repository**.
 2. Clone o repositório novo e rode `npm ci`.
