@@ -2,6 +2,9 @@ import { useState, type FormEvent } from 'react';
 import type { ApiError, InviteState } from '../../application/api-contract';
 import { strings } from '../../domain/strings';
 import { useServices } from '../backend-context';
+import { Button } from '../components/Button';
+import { Field } from '../components/Field';
+import { Notice } from '../components/Notice';
 import { useQuery } from '../use-query';
 
 const STATE_LABEL: Record<InviteState, string> = {
@@ -45,20 +48,21 @@ export function Invites() {
   return (
     <section>
       <h1>{strings.invites.title}</h1>
-      <form className="row" onSubmit={submit}>
-        <label className="grow">
-          <span className="muted">{strings.invites.emailLabel}</span>
-          <input type="email" required autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <button type="submit" disabled={busy}>
+      <form className="row end" onSubmit={submit}>
+        <Field
+          className="grow"
+          label={strings.invites.emailLabel}
+          type="email"
+          required
+          autoComplete="off"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Button type="submit" disabled={busy}>
           {strings.invites.send}
-        </button>
+        </Button>
       </form>
-      {error && (
-        <p className="notice" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <Notice tone="error">{error}</Notice>}
       {invites.data?.length === 0 && <p className="muted">{strings.invites.empty}</p>}
       <ul className="list">
         {invites.data?.map((invite) => (
@@ -66,12 +70,12 @@ export function Invites() {
             <span className="grow">
               {invite.email}
               <br />
-              <span className="muted">{STATE_LABEL[invite.state]}</span>
+              <span className="muted small">{STATE_LABEL[invite.state]}</span>
             </span>
             {invite.state === 'pending' && (
-              <button type="button" className="secondary" onClick={() => void revoke(invite.email)}>
+              <Button variant="secondary" onClick={() => void revoke(invite.email)}>
                 {strings.invites.revoke}
-              </button>
+              </Button>
             )}
           </li>
         ))}

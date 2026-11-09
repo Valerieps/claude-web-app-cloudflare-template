@@ -53,3 +53,7 @@ computador. `npm test` roda os testes; `npm run preview` serve o app como em pro
 - `docs/ROADMAP.md`: o que falta.
 - `docs/ARQUITETURA.md` e `docs/adr/`: como o app é construído e por quê.
 - `docs/SEGURANCA.md`: as regras de segurança.
+- `docs/UI.md`: as regras de interface. Os valores (cores, fontes, espaços) ficam em
+  `src/ui/theme/tokens.css`, e o `npm test` confere as regras automáticas.
+- `.claude/skills/`: `visual-identity` (criar ou mudar a identidade visual) e `ui-review`
+  (criticar a interface sem repetir o que o teste já confere).

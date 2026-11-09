@@ -4,6 +4,9 @@ import { greetingFor } from '../../domain/greeting';
 import { NAME_MAX_LENGTH } from '../../domain/group/profile';
 import { strings } from '../../domain/strings';
 import { useServices } from '../backend-context';
+import { Button } from '../components/Button';
+import { Field } from '../components/Field';
+import { Notice } from '../components/Notice';
 
 // Placeholder screen: a greeting and the member's name. Replace it with the app's first screen.
 export function Home({ me }: { me: MeView }) {
@@ -20,18 +23,18 @@ export function Home({ me }: { me: MeView }) {
   return (
     <section>
       <h1>{strings.home.greeting(greetingFor(new Date()), me.name)}</h1>
-      <form className="row" onSubmit={submit}>
-        <label className="grow">
-          <span className="muted">{strings.home.nameLabel}</span>
-          <input required maxLength={NAME_MAX_LENGTH} value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <button type="submit">{strings.home.save}</button>
+      <form className="row end" onSubmit={submit}>
+        <Field
+          className="grow"
+          label={strings.home.nameLabel}
+          required
+          maxLength={NAME_MAX_LENGTH}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Button type="submit">{strings.home.save}</Button>
       </form>
-      {error && (
-        <p className="notice" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <Notice tone="error">{error}</Notice>}
     </section>
   );
 }

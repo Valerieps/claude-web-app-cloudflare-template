@@ -66,8 +66,10 @@ Pergunte de novo só o que ficar ambíguo. Depois siga os passos, numa branch `b
 6. **Roadmap:** `docs/ROADMAP.md` com as features da primeira fase como "falta construir".
 7. **Arquitetura:** o parágrafo de abertura do `CLAUDE.md`; as tabelas novas em `docs/ARQUITETURA.md`
    (só o desenho; as migrações vêm com as features).
-8. **Identidade:** cores em `src/ui/theme/tokens.css`, e as mesmas em `index.html`, no manifest e nos
-   ícones (`src/app-identity.test.ts` confere).
+8. **Identidade:** siga a skill `visual-identity` (`.claude/skills/visual-identity/SKILL.md`).
+   Ela mostra três ou quatro direções lado a lado e grava a escolhida só como valores em
+   `src/ui/theme/tokens.css`, sem renomear tokens, e nas cores do `index.html`, do manifest e dos
+   ícones. As regras de interface estão em `docs/UI.md` e o `npm test` confere as automáticas.
 9. **Preferências:** ajuste "Working with the owner" no `CLAUDE.md` com as respostas 15 e 16.
 10. **Exemplo:** a tela `Home` e `src/domain/greeting.ts` são de exemplo; troque pela primeira tela
     de verdade quando ela existir.
