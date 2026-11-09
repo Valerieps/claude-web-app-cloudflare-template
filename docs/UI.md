@@ -16,8 +16,9 @@ nos dois temas). Nunca afrouxe o teste.
    `rem`, `em`), duração, tamanho, peso ou altura de linha de fonte. Isso vale para CSS, para TSX e
    para `style={{}}` (percentagens podem).
 2. **Só tokens que existem:** um `var(--x)` sem definição falha.
-3. **Escala tipográfica:** cada tamanho é de 1,125 a 1,5 vez o anterior. Nada abaixo de 12px. O
-   texto corrido tem pelo menos 16px.
+3. **Escala tipográfica:** cada tamanho é de 1,125 a 1,5 vez o anterior. Os tamanhos
+   `--font-size-display*` (um número em destaque, o título de uma tela de abertura) podem saltar
+   mais. Nada abaixo de 12px. O texto corrido tem pelo menos 16px.
 4. **Espaçamento na grade de 4px.**
 5. **Contraste AA nos dois temas:** texto com 4,5:1 sobre o fundo em que aparece. Borda de
    controle, anel de foco e ícone com 3:1. Uma cor nova que leva texto ou marca um controle entra na

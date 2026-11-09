@@ -107,12 +107,13 @@ function px(value: string): number {
 describe('the scales in tokens.css', () => {
   const fontSizes = [...light].filter(([name]) => name.startsWith('--font-size-')).map(([name, value]) => [name, px(value)] as const);
 
-  it('lists the font sizes from small to large, each 1.125 to 1.5 times the one before', () => {
+  // Display sizes (a hero number, a splash title) may leap: they stand alone, not in running text.
+  it('lists the font sizes from small to large, each 1.125 to 1.5 times the one before (display sizes may leap more)', () => {
     expect(fontSizes.length).toBeGreaterThanOrEqual(4);
     const jumps = fontSizes.slice(1).map(([name, size], i) => [name, Number((size / fontSizes[i][1]).toFixed(3))] as const);
     for (const [name, ratio] of jumps) {
       expect(ratio, `${name} is ${ratio}x the size before it`).toBeGreaterThanOrEqual(1.125);
-      expect(ratio, `${name} is ${ratio}x the size before it`).toBeLessThanOrEqual(1.5);
+      if (!name.startsWith('--font-size-display')) expect(ratio, `${name} is ${ratio}x the size before it`).toBeLessThanOrEqual(1.5);
     }
   });
 
