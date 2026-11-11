@@ -14,6 +14,8 @@ The owner edits docs between messages: re-read a doc before editing it and prese
 | Task | Read |
 | --- | --- |
 | Any code change | The hard rules below; `docs/SEGURANCA.md` when the change touches storage, network, dependencies or rendered user text |
+| Any change under `src/ui/` | The UI hard rules below; `docs/UI.md` when building or restyling a screen |
+| Critiquing the UI, or changing the visual identity | The `ui-review` or `visual-identity` skill in `.claude/skills/` |
 | Implementing or changing a feature | Its file in `docs/spec/` (the table in `docs/SPEC.md` says which); its rows in `docs/ROADMAP.md`; the ADRs found by grepping `docs/adr/` |
 | Changing the data model, events or migrations | `docs/ARQUITETURA.md` and the ADRs it cites |
 | Answering a product question or deciding a rule | The relevant file in `docs/spec/` and its "Em aberto"; `docs/GLOSSARIO.md` for the terms |
@@ -27,6 +29,14 @@ Hard rules from `docs/SEGURANCA.md`, valid for every change:
 - Never insert user text as HTML; links open with `target="_blank" rel="noopener noreferrer"`.
 - Minimize dependencies; pin exact versions; bundle them, never load from a CDN.
 - `network-policy.ts` is the only place that says which servers the app and the Worker may talk to.
+
+UI hard rules from `docs/UI.md`, valid for every change under `src/ui/`
+(`src/ui/theme/tokens.test.ts` fails the build on the first four):
+- No literal color, length, duration, font size, weight or line height outside `src/ui/theme/tokens.css`, inline styles included. No fitting token: add one, never a literal.
+- Never rename a token or loosen `tokens.test.ts` to make it pass.
+- Font sizes only from the scale; spacing only from `--space-*`.
+- Every text color pair passes WCAG AA in both themes; a new pair goes into the test's list.
+- Use `src/ui/components/` (`Button`, `ButtonLink`, `Field`, `Notice`) before writing new CSS.
 
 ### Where information lives
 
@@ -42,6 +52,7 @@ wins: fix the other doc in the same change.
 | What is missing, where code lags behind the spec, what is deferred | `docs/ROADMAP.md` | Only what is NOT done. When something is built, its row leaves the roadmap; git and closed issues keep the history |
 | Technical design the code does not show | `docs/ARQUITETURA.md` | Invariants, the data model, the event flow and migrations. Not a tour of the files: the code shows that |
 | Technical decisions | `docs/adr/`, one file per decision | Each ADR has a `**Status:**` line and a unique number; there is no separate index. Find ADRs by grepping `docs/adr/` |
+| Interface rules (spacing, type, contrast, states, hierarchy) | `docs/UI.md` | Values live in `src/ui/theme/tokens.css`; `src/ui/theme/tokens.test.ts` enforces what can be checked |
 | Security rules | `docs/SEGURANCA.md` | Short; enforced by `src/security.test.ts` wherever a rule can be tested |
 | Feature requests not yet decided | GitHub issues, `t:enhancement` + a size label | When decided: rule to `docs/spec/`, row to `docs/ROADMAP.md`, issue closed |
 | Bugs, technical debt, known limitations, checks only the owner can do | GitHub issues, `t:bug` or `t:debito-tecnico` + a priority (`p:`) + a size (`s:`) | Close the issue when resolved; open one when you knowingly leave something behind |
@@ -100,7 +111,7 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 - `src/domain` - entities and rules. Pure TypeScript, no framework imports. Shared with the server. `strings.ts` holds every UI text.
 - `src/application` - ports (interfaces the infrastructure implements) and `api-contract.ts`, the API's types.
 - `src/infrastructure` - the HTTP backend and the live socket; the only place in `src/` that may use the network.
-- `src/ui` - React components. All colors, fonts and spacing live in `src/ui/theme/tokens.css`.
+- `src/ui` - React components. All colors, fonts, sizes and spacing live in `src/ui/theme/tokens.css`; shared components in `src/ui/components/`.
 - `server/application` - the server's use cases (`GroupService`), synchronous, on the `Sql`/`Clock`/`IdGenerator` ports; `schema.ts` holds the migrations.
 - `server/infrastructure`, `server/entry` - Durable Object, Worker, Google sign-in, cookies. `server/testing` - `node:sqlite` for tests.
 - `wrangler.jsonc` - the Worker: assets, Durable Object, cron, vars. Secrets via `wrangler secret put`; locally in `.dev.vars` (see `.dev.vars.example`).

@@ -3,6 +3,8 @@ import type { MeView } from '../application/api-contract';
 import { canManageGroup } from '../domain/group/roles';
 import { strings } from '../domain/strings';
 import { useLiveStatus, useServices } from './backend-context';
+import { Button } from './components/Button';
+import { Notice } from './components/Notice';
 import { Link, navigate, usePath } from './router';
 import { Home } from './screens/Home';
 import { Invites } from './screens/Invites';
@@ -26,12 +28,8 @@ export function App() {
   if (!me.data && me.error && me.error !== 'unauthenticated') {
     return (
       <main className="app">
-        <p className="notice" role="alert">
-          {strings.genericError}
-        </p>
-        <button type="button" onClick={me.reload}>
-          {strings.retry}
-        </button>
+        <Notice tone="error">{strings.genericError}</Notice>
+        <Button onClick={me.reload}>{strings.retry}</Button>
       </main>
     );
   }
@@ -67,9 +65,9 @@ function Navigation({ me, onSignOut }: { me: MeView; onSignOut: () => void }) {
         </Link>
       ))}
       <span className="grow" />
-      <button type="button" className="secondary" onClick={onSignOut}>
+      <Button variant="secondary" onClick={onSignOut}>
         {strings.nav.signOut}
-      </button>
+      </Button>
     </nav>
   );
 }
@@ -77,11 +75,7 @@ function Navigation({ me, onSignOut }: { me: MeView; onSignOut: () => void }) {
 function OfflineNotice() {
   const status = useLiveStatus();
   if (status !== 'offline') return null;
-  return (
-    <p className="notice" role="status">
-      {strings.offline}
-    </p>
-  );
+  return <Notice>{strings.offline}</Notice>;
 }
 
 function Screen({ me }: { me: MeView }) {

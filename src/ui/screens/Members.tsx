@@ -3,6 +3,8 @@ import type { ApiError, MeView, MemberListItem } from '../../application/api-con
 import { canManageGroup, isAdmin } from '../../domain/group/roles';
 import { strings } from '../../domain/strings';
 import { useServices } from '../backend-context';
+import { Button } from '../components/Button';
+import { Notice } from '../components/Notice';
 import { useQuery } from '../use-query';
 
 function errorText(error: ApiError): string {
@@ -36,12 +38,8 @@ export function Members({ me }: { me: MeView }) {
   return (
     <section>
       <h1>{strings.members.title}</h1>
-      {members.error && !members.data && <p className="notice">{strings.genericError}</p>}
-      {error && (
-        <p className="notice" role="alert">
-          {error}
-        </p>
-      )}
+      {members.error && !members.data && <Notice tone="error">{strings.genericError}</Notice>}
+      {error && <Notice tone="error">{error}</Notice>}
       {members.data?.length === 1 && <p className="muted">{strings.members.empty}</p>}
       <ul className="list">
         {members.data?.map((member) => (
@@ -50,35 +48,33 @@ export function Members({ me }: { me: MeView }) {
             <span className="grow">
               {member.name} {member.id === me.id && <span className="muted">{strings.members.you}</span>}
               <br />
-              <span className="muted">{isAdmin(member) ? strings.members.admin : strings.members.member}</span>
+              <span className="muted small">{isAdmin(member) ? strings.members.admin : strings.members.member}</span>
               {member.email && (
                 <>
                   <br />
-                  <span className="muted">{member.email}</span>
+                  <span className="muted small">{member.email}</span>
                 </>
               )}
             </span>
             {manages && (
               <span className="row" role="group" aria-label={strings.members.rolesOf(member.name)}>
-                <button
-                  type="button"
-                  className="secondary"
+                <Button
+                  variant="secondary"
                   aria-pressed={isAdmin(member)}
                   disabled={busy === member.id}
                   onClick={() => void toggleAdmin(member)}
                 >
                   {strings.members.makeAdmin}
-                </button>
+                </Button>
                 {member.id !== me.id && (
-                  <button
-                    type="button"
-                    className="secondary danger"
+                  <Button
+                    variant="secondary-danger"
                     aria-label={strings.members.removeOf(member.name)}
                     disabled={busy === member.id}
                     onClick={() => void remove(member)}
                   >
                     {strings.members.remove}
-                  </button>
+                  </Button>
                 )}
               </span>
             )}

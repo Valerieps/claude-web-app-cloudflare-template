@@ -2,6 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react';
 import type { ApiError } from '../../application/api-contract';
 import { strings } from '../../domain/strings';
 import { useServices } from '../backend-context';
+import { Button, ButtonLink } from '../components/Button';
+import { Field } from '../components/Field';
+import { Notice } from '../components/Notice';
 import { navigate } from '../router';
 
 const ERRORS: Record<string, string> = {
@@ -35,24 +38,21 @@ function DevSignIn() {
 
   return (
     <form className="stack dev-sign-in" onSubmit={submit}>
-      <strong>{strings.signIn.devTitle}</strong>
-      <label>
-        <span className="muted">{strings.signIn.devEmail}</span>
-        <input type="email" required autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </label>
-      <label>
-        <span className="muted">{strings.signIn.devName}</span>
-        <input autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} />
-      </label>
-      {error && (
-        <p className="notice" role="alert">
-          {error}
-        </p>
-      )}
-      <button type="submit" className="secondary">
+      <h2>{strings.signIn.devTitle}</h2>
+      <Field
+        label={strings.signIn.devEmail}
+        type="email"
+        required
+        autoComplete="off"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Field label={strings.signIn.devName} autoComplete="off" value={name} onChange={(e) => setName(e.target.value)} />
+      {error && <Notice tone="error">{error}</Notice>}
+      <Button type="submit" variant="secondary">
         {strings.signIn.devButton}
-      </button>
-      <p className="muted">{strings.signIn.devHint}</p>
+      </Button>
+      <p className="muted small">{strings.signIn.devHint}</p>
     </form>
   );
 }
@@ -70,14 +70,8 @@ export function SignIn() {
     <main className="app stack">
       <h1>{strings.appName}</h1>
       <p>{strings.signIn.tagline}</p>
-      {error && (
-        <p className="notice" role="alert">
-          {error}
-        </p>
-      )}
-      <a className="button" href={backend.signInUrl}>
-        {strings.signIn.button}
-      </a>
+      {error && <Notice tone="error">{error}</Notice>}
+      <ButtonLink href={backend.signInUrl}>{strings.signIn.button}</ButtonLink>
       {LOCAL_HOSTS.includes(window.location.hostname) && <DevSignIn />}
     </main>
   );
