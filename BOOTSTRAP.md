@@ -23,7 +23,7 @@ Pergunte de novo só o que ficar ambíguo. Depois siga os passos, numa branch `b
 ## 1. Entrevista
 
 **O app**
-1. Qual é o nome do app? E o endereço que você quer (`<nome>.<sua-conta>.workers.dev` ou um domínio seu)?
+1. Qual é o nome do app? (O endereço sai dele: veja "Endereço" no passo 1.)
 2. Que problema ele resolve, e para quem? Quem está no grupo, e mais ou menos quantas pessoas?
 3. O que cada pessoa faz nele todo dia (o ciclo principal), em duas ou três frases?
 4. Qual é a menor versão que já seria útil? E o que vem depois, em fases?
@@ -55,6 +55,11 @@ Pergunte de novo só o que ficar ambíguo. Depois siga os passos, numa branch `b
 1. **Nome:** `package.json` (`name`), `wrangler.jsonc` (`name`), `index.html` (`<title>`),
    `public/manifest.webmanifest`, `strings.appName` e `strings.signIn.tagline` em
    `src/domain/strings.ts`, títulos do `CLAUDE.md` e do `README.md`.
+   **Endereço:** não pergunte. O nome do Worker é o nome do app em minúsculas, sem acentos e com
+   hífens no lugar de espaços e pontuação ("Estuda, Henrique" vira `estuda-henrique`), e o
+   subdomínio da conta da dona no Cloudflare é sempre `souza.pereira.valeria`. O endereço é
+   `https://<nome do Worker>.souza.pereira.valeria.workers.dev`: escreva-o na seção "Deployment"
+   do `CLAUDE.md` e use-o na seção 3.
 2. **Acesso:** ajuste `docs/spec/acesso-e-membros.md` com as respostas 6 a 8. Papéis novos entram em
    `src/domain/group/roles.ts` (com testes) e na tela de membros.
 3. **Rede:** cada serviço da resposta 10 vai para `SERVER_ORIGINS` (ou `ALLOWED_ORIGINS`/`IMAGE_ORIGINS`)
@@ -85,7 +90,7 @@ roda no computador com o login de teste (`.dev.vars` com `DEV_SIGN_IN=1`, ADR-00
 1. **Google Cloud** (console.cloud.google.com): crie um projeto; em "Google Auth Platform", configure
    a tela de consentimento (tipo "Externo", só os escopos `openid`, `email` e `profile`) e crie um
    cliente OAuth do tipo "Aplicativo da Web" com os URIs de redirecionamento
-   `https://<endereço do app>/api/auth/callback` e `http://localhost:5173/api/auth/callback`.
+   `https://<nome do Worker>.souza.pereira.valeria.workers.dev/api/auth/callback` e `http://localhost:5173/api/auth/callback`.
    Enquanto o app estiver "Em teste", só os usuários de teste listados lá conseguem entrar:
    publique o app (sem verificação, já que os escopos são básicos) quando o grupo for usar.
 2. **Configuração:** o ID do cliente vai em `GOOGLE_CLIENT_ID` no `wrangler.jsonc` (é público).
