@@ -135,6 +135,8 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 - `npm run branches` - what is not merged yet, per branch and worktree; `-- --clean` deletes merged local branches
 
 ## Deployment
+Production address: `https://<BOOTSTRAP.md: worker name>.souza.pereira.valeria.workers.dev` (the
+Worker's `name` in `wrangler.jsonc`, on the owner's account subdomain).
 Cloudflare Workers Builds, from the GitHub repository. Build command `npm run build`, deploy
 command `npx wrangler deploy` for `main`; other branches get a preview version (ADR-004). Sign-in
 only works where Google has the redirect URI registered: production and localhost (ADR-005). GitHub Actions (`.github/workflows/ci.yml`) runs the same build and the docs check on every
