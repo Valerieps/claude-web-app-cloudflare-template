@@ -1,6 +1,6 @@
 # ADR-004: Cloudflare Workers backend with one Durable Object for the whole group
 
-**Status:** Accepted
+**Status:** Accepted, updated by ADR-008
 **Date:** 2026-10-21
 **Decision:** One Cloudflare Worker (`server/entry/worker.ts`, configured in `wrangler.jsonc`) serves
 the built app from `dist/` (static assets, single-page fallback), the API under `/api`, the live
@@ -15,8 +15,8 @@ database: it calls `POST /api/query/<name>` and `POST /api/command/<name>`, type
 - **Live updates:** each open app keeps one WebSocket to `/api/live`, accepted with the hibernation
   API. After a command, the object sends `{type: 'changed', topics}`; screens refetch those topics,
   and refetch everything after a reconnect.
-- **Time-based jobs:** one cron every 5 minutes calls `Group.tick()`; each job decides whether it is
-  due. Cron runs in UTC: a job tied to the local calendar converts the time itself.
+- **Time-based jobs:** `Group.tick()`, called every 5 minutes (see ADR-008 for who calls it); each
+  job decides whether it is due. Cron runs in UTC: a job tied to the local calendar converts the time itself.
 - **Plan:** Workers Free. Durable Objects with SQLite storage and cron triggers are included.
 - **Deploy:** Workers Builds, connected to the GitHub repository, runs `npm run build` and deploys
   `main`; other branches get a preview version (`wrangler preview`, configured by the `previews`

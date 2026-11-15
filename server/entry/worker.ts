@@ -1,5 +1,6 @@
-// The Worker: serves the app's files, the API under /api, the live connection and the cron
-// (ADR-004). Everything about the group is delegated to the Group Durable Object.
+// The Worker: serves the app's files, the API under /api, the live connection and the cron entrypoint
+// (ADR-004, ADR-008). Everything about the group is delegated to the Group Durable Object.
+import { WorkerEntrypoint } from 'cloudflare:workers';
 import type { ApiError, ApiResult } from '../../src/application/api-contract';
 import { SESSION_DAYS, type GoogleProfile } from '../application/members';
 import { clearCookie, LOGIN_COOKIE, readCookie, SESSION_COOKIE, setCookie } from '../infrastructure/cookies';
@@ -149,8 +150,16 @@ export default {
     if (url.pathname.startsWith('/api/')) return api(request, env, url);
     return env.ASSETS.fetch(request);
   },
-
-  async scheduled(_controller, env, _ctx): Promise<void> {
-    await group(env).tick();
-  },
 } satisfies ExportedHandler<Env>;
+
+/** The time-based jobs (ADR-008). Called by the `cron-central` Worker, never by a trigger here. */
+export async function runCron(env: Env, _ctx: ExecutionContext): Promise<void> {
+  await group(env).tick();
+}
+
+/** Service-binding entrypoint: `cron-central` calls `Cron.tick()` on its schedule. */
+export class Cron extends WorkerEntrypoint<Env> {
+  async tick(): Promise<void> {
+    await runCron(this.env, this.ctx);
+  }
+}
