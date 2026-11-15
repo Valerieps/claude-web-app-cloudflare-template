@@ -117,10 +117,16 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 - `src/ui` - React components. All colors, fonts, sizes and spacing live in `src/ui/theme/tokens.css`; shared components in `src/ui/components/`.
 - `server/application` - the server's use cases (`GroupService`), synchronous, on the `Sql`/`Clock`/`IdGenerator` ports; `schema.ts` holds the migrations.
 - `server/infrastructure`, `server/entry` - Durable Object, Worker, Google sign-in, cookies. `server/testing` - `node:sqlite` for tests.
-- `wrangler.jsonc` - the Worker: assets, Durable Object, cron, vars. Secrets via `wrangler secret put`; locally in `.dev.vars` (see `.dev.vars.example`).
+- `wrangler.jsonc` - the Worker: assets, Durable Object, vars (no cron trigger: ADR-008). Secrets via `wrangler secret put`; locally in `.dev.vars` (see `.dev.vars.example`).
 - `public/` - static files: manifest, icons, `_headers`.
 - `network-policy.ts` - the servers the app (`ALLOWED_ORIGINS`, `IMAGE_ORIGINS`) and the Worker (`SERVER_ORIGINS`) may talk to.
 - `scripts/` - `check-docs.mjs` (run by CI) and `setup-repo.mjs` (once per new repository), `ship.mjs` and `branches.mjs` (see Commands).
+
+## Cron
+The app has no `triggers.crons`. Its time-based jobs run in the `Cron` entrypoint of
+`server/entry/worker.ts` (`runCron` -> `GroupService.tick`), which the `cron-central` Worker
+(repo `Valerieps/cron-central`) calls via service binding. A new app is added there in `JOBS` and
+`services`; see ADR-008.
 
 ## Commands
 - `npm ci` - install exactly what the lockfile pins
